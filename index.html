@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigMart Sales Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url("foml.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            color: #fff;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #f9f7f7fe;
+            display:flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap:1em;
+            border-radius: 5px;
+            background-color: #45454572;
+        }
+        .container1 {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            /* border: 1px solid #f9f7f7fe; */
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap:1em;
+            border-radius: 5px;
+            
+        }
+        .form-group {
+            margin-bottom: 20px;
+            justify-content: center;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap:1.5em;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="number"] {
+            margin-top: 10px;
+            width: 100%;
+            padding: 5px;
+            background-color: transparent;
+            border: none;
+            border-bottom:  1px solid white;
+        }
+        ::placeholder{
+            color: white;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center;font-family: cursive;">Store Sales Prediction</h2>
+   <div class="container">
+    <div class="container1">
+        <div class="form-group">
+            <input type="text" id="Item_Identifier" name="Item_Identifier" placeholder="Item Identifier:">
+        </div>
+        <div class="form-group">
+            <input type="text" id="Item_Weight" name="Item_Weight" placeholder="Item Weight:">
+        </div>
+        <div class="form-group">
+            <input type="text" id="Item_Fat_Content" name="Item_Fat_Content" placeholder="Item Fat Content:">
+        </div>
+        <div class="form-group">
+            <input type="text" id="Item_Visibility" name="Item_Visibility" placeholder="Item Visibility:">
+        </div>
+        <div class="form-group">
+            <input type="text" id="Item_Type" name="Item_Type" placeholder="Item Type:">
+        </div>
+        <div class="form-group">
+            <input type="text" id="Item_MRP" name="Item_MRP" placeholder="Item MRP:">
+        </div>
+    </div>
+    <div class="container1">
+        <div class="form-group">
+            <input type="text" id="Outlet_Identifier" name="Outlet_Identifier" placeholder="Outlet Identifier:">
+        </div>
+        <div class="form-group">
+            <input type="text" id="Outlet_Establishment_Year" name="Outlet_Establishment_Year" placeholder="Outlet Establishment Year:">
+        </div>
+        <div class="form-group">
+            <input type="text" id="Outlet_Size" name="Outlet_Size" placeholder="Outlet Size:">
+        </div>
+        <div class="form-group">
+            <input type="text" id="Outlet_Location_Type" name="Outlet_Location_Type" placeholder="Outlet Location Type:">
+        </div>
+        <div class="form-group">
+            <input type="text" id="Outlet_Type" name="Outlet_Type" placeholder="Outlet Type:">
+        </div>
+        <button onclick="predictSales()">Predict Sales</button>
+        <div id="result"></div>
+    </div>
+</div>
+   </div>
+</body>
+
+    <script>
+        function predictSales() {
+            // Get input values
+            const Item_Identifier = document.getElementById('Item_Identifier').value;
+            const Item_Weight = document.getElementById('Item_Weight').value;
+            const Item_Fat_Content = document.getElementById('Item_Fat_Content').value;
+            const Item_Visibility = document.getElementById('Item_Visibility').value;
+            const Item_Type = document.getElementById('Item_Type').value;
+            const Item_MRP = document.getElementById('Item_MRP').value;
+            const Outlet_Identifier = document.getElementById('Outlet_Identifier').value;
+            const Outlet_Establishment_Year = document.getElementById('Outlet_Establishment_Year').value;
+            const Outlet_Size = document.getElementById('Outlet_Size').value;
+            const Outlet_Location_Type = document.getElementById('Outlet_Location_Type').value;
+            const Outlet_Type = document.getElementById('Outlet_Type').value;
+
+            // Prepare payload
+            const payload = {
+                Item_Identifier: parseInt(Item_Identifier),
+                Item_Weight: parseFloat(Item_Weight),
+                Item_Fat_Content: parseInt(Item_Fat_Content),
+                Item_Visibility: parseFloat(Item_Visibility),
+                Item_Type: parseInt(Item_Type),
+                Item_MRP: parseFloat(Item_MRP),
+                Outlet_Identifier: parseInt(Outlet_Identifier),
+                Outlet_Establishment_Year: parseInt(Outlet_Establishment_Year),
+                Outlet_Size: parseInt(Outlet_Size),
+                Outlet_Location_Type: parseInt(Outlet_Location_Type),
+                Outlet_Type: parseInt(Outlet_Type)
+            };
+
+            // Make API request
+            fetch('http://127.0.0.1:8000/bigmart_prediction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display prediction result
+                document.getElementById('result').innerText = 'Predicted Sales: ' + data.prediction;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
